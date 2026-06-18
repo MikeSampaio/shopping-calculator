@@ -40,7 +40,17 @@ def pause():
 #helper_5 - screen clear untill I learn a better one
 def clear_screen():
     print('\n' * 50)
-
+#helper 6 - save history to a file
+def save_history(entry):
+    with open('history.txt', 'a') as file:
+        file.write(entry + '\n')
+#helper 7 - separate sections in history
+def save_separator(text):
+    save_history(f"\n {'-' * 10} {text} {'-' * 10}")
+#helper 8 - clear history
+def clear_history():   
+    with open('history.txt', 'w') as file:
+        pass
 
 VERSION = '1.0'           
 exchange_rate = None #state
@@ -53,7 +63,7 @@ HUNDRED_GRAMS_PER_POUND = 4.53592
 def save_exchange_rate():
     with open('exchange_rate.txt', 'w') as file:
         file.write(str(exchange_rate))
-        print('Exchange rate saved to file.')
+        print('Exchange rate saved.')
 
 #load exchange rate from a file
 def load_exchange_rate():
@@ -64,7 +74,7 @@ def load_exchange_rate():
     except (FileNotFoundError, ValueError):
         exchange_rate = None
 
-#exchange rate
+#exchange rate function
 def get_exchange_rate():
     while True:
         rate = input('Exchange rate (CAD$ to EUR) or menu:' )
@@ -83,16 +93,18 @@ def get_exchange_rate():
         except ValueError:
                 print('Invalid data. Switch "," to "." ?')
 
-#1 price converter
+#Calculator 1 - price converter
 def price_converter():
     price_cad = positive_float('Price in CAD$ or menu: ')
     if price_cad is None:
         return
     price_eur = price_cad * exchange_rate
-    print_currency('Price8:', price_cad, price_eur)
+    print_currency('Price:', price_cad, price_eur)
+    save_separator("Price Converter")
+    save_history(f"Price converted: {price_cad} CAD$ | {price_eur:.2f} €")
     pause()
 
-#2 discount function 
+#Calculator 2 - discount calculator
 def discount_calculator():
     regular_price = positive_float('Regular Price (CAD$) or menu: ')
     if regular_price is None:
@@ -108,8 +120,10 @@ def discount_calculator():
     money_saved_cad = regular_price - sale_price
     money_saved_eur = money_saved_cad * exchange_rate
     
-    print('Item is', rounded_discount,'% d1iscounted')
+    print('Item is', rounded_discount,'% discounted')
     print('Money saved:', money_saved_cad, 'CAD$ |', round(money_saved_eur, 2), '€')
+    save_separator("Discount Calculator")
+    save_history(f"Item is {rounded_discount}% discounted | Money saved: {money_saved_cad} CAD$ | {round(money_saved_eur, 2)} €")
     
     
     if rounded_discount > 100: 
@@ -124,7 +138,7 @@ def discount_calculator():
     else:
         print('Enjoy your discount!')
         pause()
-#3 packageprice to lb/kg/100g
+#Calculator 3 - package price calculator
 def packagepricepound():
     while True:
         unit = input('Weight unit (lb or g):').lower()
@@ -166,10 +180,16 @@ def packagepricepound():
     print_currency('Price per 100g is:', price_per_100g_cad, price_per_100g_eur)
     print_currency('Price per lb is:', price_per_lb_cad, price_per_lb_eur)
     print_currency('Price per kg is:', price_per_kg_cad, price_per_kg_eur)
+
+    save_separator("Package Price")
+
+    save_history(f"Price per 100g is: {price_per_100g_cad} CAD$ | {price_per_100g_eur:.2f} €")
+    save_history(f"Price per lb is: {price_per_lb_cad} CAD$ | {price_per_lb_eur:.2f} €")
+    save_history(f"Price per kg is: {price_per_kg_cad} CAD$ | {price_per_kg_eur:.2f} €")
     pause()
     
 
-#4 100g to lb/kg
+#Calculator: 4 100g to lb/kg
 def price_100g_converter():
     
     priceper100g = positive_float('What is the price in CAD$ of 100g or menu:' )
@@ -183,13 +203,18 @@ def price_100g_converter():
     
     price_100g_to_kg_cad = priceper100g * 10
     price_100g_to_kg_eur = price_100g_to_kg_cad * exchange_rate
-        
+
+    save_separator('Price per 100g') 
+
     print_currency('Price per 100g is:', priceper100g, exchanged_price)
     print_currency('Price per pound is:', price_100g_to_pound_cad, price_100g_to_pound_eur)
     print_currency('Price per kg is:', price_100g_to_kg_cad, price_100g_to_kg_eur)
+    save_history(f"Price per 100g is: {priceper100g} CAD$ | {exchanged_price:.2f} €")
+    save_history(f"Price per pound is: {price_100g_to_pound_cad} CAD$ | {price_100g_to_pound_eur:.2f} €")
+    save_history(f"Price per kg is: {price_100g_to_kg_cad} CAD$ | {price_100g_to_kg_eur:.2f} €")
     pause()
     
-#5 this one calculates the package price from cad/lb to the grams of the product
+#Calculator 5: this one calculates the package price from cad/lb to the grams of the product
 def price_lb_to_g():
 
     weight_g = positive_float('What is the weight, in grams, of the item? or menu: ')
@@ -202,13 +227,16 @@ def price_lb_to_g():
 
     if price_per_lb_cad is None:
         return
-        
+
     package_price_cad = weight_lb * price_per_lb_cad
     package_price_eur = package_price_cad * exchange_rate
 
     print_currency('The price of the item is:', package_price_cad, package_price_eur)
+    save_separator("Price lb to g")
+    save_history(f"The price of the item is: {package_price_cad} CAD$ | {package_price_eur:.2f} €")
     pause()
-#6 compare products
+
+#Calculator 6: compare products
 def product_comparison():
     print('\nProduct A')
     weight_a = positive_float('Weight in g or menu:' )
@@ -233,14 +261,22 @@ def product_comparison():
     print_currency('Product A (100g)', price_100g_a, price_100g_a * exchange_rate)
     print_currency('Product B (100g)', price_100g_b, price_100g_b * exchange_rate)
 
+    save_separator("Comparison between A and B")
+
+    save_history(f"Product A (100g): {price_100g_a} CAD$ | {price_100g_a * exchange_rate:.2f} €")
+    save_history(f"Product B (100g): {price_100g_b} CAD$ | {price_100g_b * exchange_rate:.2f} €")
+
     if price_100g_a > price_100g_b:
         print('Product B is the better deal')
+        save_history('Product B is the better deal')
     elif price_100g_a < price_100g_b:
         print('Product A is the better deal')
+        save_history('Product A is the better deal')
     else:
         print('Value is equal. Both good deals')
+        save_history('Value is equal. Both good deals')
     pause()
-#7 menu function
+# Function 7 - Menu function
 def show_menu():
     print(f'\n====Shopping Calculator v{VERSION}====')
     if exchange_rate is None:
@@ -255,11 +291,25 @@ def show_menu():
     print('6 - Comparison tool')
     print('7 - Show current exchange rate')
     print('8 - Change exchange rate')
-    print('9 - Exit')
+    print('9 - View history')
+    print('10 - Clear history')
+    print('11 - Exit')
     return input('Choose an option: ' )
+
+#Function 8: view history
+def view_history():
+    try:
+        with open('history.txt', 'r') as file:
+            print('\n=== Calculation History ===')
+            print(file.read())
+
+    except FileNotFoundError:
+        print('No history found.')
+
 
 #get exchange rate from file at the start of the program
 load_exchange_rate() 
+
 
 #loop for menu
 while True:
@@ -313,8 +363,17 @@ while True:
             if exchange_rate is not None:
                 save_exchange_rate()
             pause()
-                
+
     elif choice == '9':
+        view_history()
+        pause()
+    
+    elif choice == '10':
+        clear_history()
+        print('History cleared.')
+        pause()
+            
+    elif choice == '11':
         print('Goodbye!')
         break
     else:
