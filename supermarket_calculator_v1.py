@@ -48,6 +48,22 @@ GRAMS_PER_POUND = 453.592
 POUNDS_PER_KG = 2.20462
 HUNDRED_GRAMS_PER_POUND = 4.53592
 
+
+#save exchange rate to a file
+def save_exchange_rate():
+    with open('exchange_rate.txt', 'w') as file:
+        file.write(str(exchange_rate))
+        print('Exchange rate saved to file.')
+
+#load exchange rate from a file
+def load_exchange_rate():
+    global exchange_rate
+    try:
+        with open('exchange_rate.txt', 'r') as file:
+            exchange_rate = float(file.read())
+    except (FileNotFoundError, ValueError):
+        exchange_rate = None
+
 #exchange rate
 def get_exchange_rate():
     while True:
@@ -73,7 +89,7 @@ def price_converter():
     if price_cad is None:
         return
     price_eur = price_cad * exchange_rate
-    print_currency('Price is:', price_cad, price_eur)
+    print_currency('Price8:', price_cad, price_eur)
     pause()
 
 #2 discount function 
@@ -242,6 +258,9 @@ def show_menu():
     print('9 - Exit')
     return input('Choose an option: ' )
 
+#get exchange rate from file at the start of the program
+load_exchange_rate() 
+
 #loop for menu
 while True:
     clear_screen()
@@ -286,9 +305,14 @@ while True:
             print('No exchange rate defined yet')
         else:
             print('Current exchange rate: ', exchange_rate)
-                
+        pause()
+               
     elif choice == '8':
             exchange_rate = get_exchange_rate()
+           
+            if exchange_rate is not None:
+                save_exchange_rate()
+            pause()
                 
     elif choice == '9':
         print('Goodbye!')
