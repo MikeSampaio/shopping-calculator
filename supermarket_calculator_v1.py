@@ -67,7 +67,16 @@ def get_exchange_rate():
         except ValueError:
                 print('Invalid data. Switch "," to "." ?')
 
-#1 discount function 
+#1 price converter
+def price_converter():
+    price_cad = positive_float('Price in CAD$ or menu: ')
+    if price_cad is None:
+        return
+    price_eur = price_cad * exchange_rate
+    print_currency('Price is:', price_cad, price_eur)
+    pause()
+
+#2 discount function 
 def discount_calculator():
     regular_price = positive_float('Regular Price (CAD$) or menu: ')
     if regular_price is None:
@@ -99,7 +108,7 @@ def discount_calculator():
     else:
         print('Enjoy your discount!')
         pause()
-# 2 price per pound
+#3 packageprice to lb/kg/100g
 def packagepricepound():
     while True:
         unit = input('Weight unit (lb or g):').lower()
@@ -144,7 +153,7 @@ def packagepricepound():
     pause()
     
 
-#3 100g to lbkg
+#4 100g to lb/kg
 def price_100g_converter():
     
     priceper100g = positive_float('What is the price in CAD$ of 100g or menu:' )
@@ -164,7 +173,7 @@ def price_100g_converter():
     print_currency('Price per kg is:', price_100g_to_kg_cad, price_100g_to_kg_eur)
     pause()
     
-#4 this one calculates the package price from cad/lb to the grams of the product
+#5 this one calculates the package price from cad/lb to the grams of the product
 def price_lb_to_g():
 
     weight_g = positive_float('What is the weight, in grams, of the item? or menu: ')
@@ -183,7 +192,7 @@ def price_lb_to_g():
 
     print_currency('The price of the item is:', package_price_cad, package_price_eur)
     pause()
-#5 compare products
+#6 compare products
 def product_comparison():
     print('\nProduct A')
     weight_a = positive_float('Weight in g or menu:' )
@@ -215,21 +224,22 @@ def product_comparison():
     else:
         print('Value is equal. Both good deals')
     pause()
-#menu function
+#7 menu function
 def show_menu():
     print(f'\n====Shopping Calculator v{VERSION}====')
     if exchange_rate is None:
         print('\n==== Current rate: Not set ====')
     else:
         print(f'\n==== Current rate: 1 CAD$ = {exchange_rate} € ====')
-    print('1 - Discount Calculator')
-    print('2 - Package price -> lb/kg/100g')
-    print('3 - Price per 100g to lb and kg converter')
-    print('4 - CAD/lb + grams -> package price')
-    print('5 - Comparison tool')
-    print('6 - Show current exchange rate')
-    print('7 - Change exchange rate')
-    print('8 - Exit')
+    print('1 - Price Converter (CAD$ to EUR)')
+    print('2 - Discount Calculator')
+    print('3 - Package price -> lb/kg/100g')
+    print('4 - Price per 100g to lb and kg converter')
+    print('5 - CAD/lb + grams -> package price')
+    print('6 - Comparison tool')
+    print('7 - Show current exchange rate')
+    print('8 - Change exchange rate')
+    print('9 - Exit')
     return input('Choose an option: ' )
 
 #loop for menu
@@ -240,43 +250,47 @@ while True:
     if choice == '1':
         if ensure_exchange_rate() is None:
             continue
-        discount_calculator()
+        price_converter()
    
             
     elif choice == '2':
          if ensure_exchange_rate() is None:
                 continue
-         packagepricepound()
+         discount_calculator()
 
 
     elif choice == '3':
         if ensure_exchange_rate() is None:
             continue
-        price_100g_converter()
+        packagepricepound()
         
             
     elif choice == '4':
         if ensure_exchange_rate() is None:
             continue
-        price_lb_to_g()
+        price_100g_converter()
         
             
     elif choice == '5':
         if ensure_exchange_rate() is None:
             continue
-        product_comparison()
-        
-            
+        price_lb_to_g()
+
     elif choice == '6':
+        if ensure_exchange_rate() is None:
+            continue
+        product_comparison()    
+            
+    elif choice == '7':
         if exchange_rate is None:
             print('No exchange rate defined yet')
         else:
             print('Current exchange rate: ', exchange_rate)
                 
-    elif choice == '7':
+    elif choice == '8':
             exchange_rate = get_exchange_rate()
                 
-    elif choice == '8':
+    elif choice == '9':
         print('Goodbye!')
         break
     else:
