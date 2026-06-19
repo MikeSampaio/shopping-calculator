@@ -1,4 +1,7 @@
 #helper_1 - float rules for user input
+from ast import While
+
+
 def positive_float(message):
     while True:
         text = input(message)
@@ -50,6 +53,12 @@ def save_separator(text):
 #helper 8 - clear history
 def clear_history():   
     with open('history.txt', 'w') as file:
+        pass
+#helper 9 - clear exchange rate
+def clear_exchange_rate():
+    global exchange_rate
+    exchange_rate = None
+    with open('exchange_rate.txt', 'w') as file:
         pass
 
 VERSION = '1.0'           
@@ -289,12 +298,23 @@ def show_menu():
     print('4 - Price per 100g to lb and kg converter')
     print('5 - CAD/lb + grams -> package price')
     print('6 - Comparison tool')
-    print('7 - Show current exchange rate')
-    print('8 - Change exchange rate')
-    print('9 - View history')
-    print('10 - Clear history')
-    print('11 - Exit')
-    return input('Choose an option: ' )
+    print('7 - Settings')
+    print('8 - Exit')
+    while True:
+        choice = input('Choose an option: ')
+        if choice in map(str, range(1, 9)):
+            return choice
+        print('Invalid option, choose a number between 1 and 8')
+
+
+def settings_menu():
+    print('\n====Settings====')
+    print('1 - Show current exchange rate')
+    print('2 - Change exchange rate')
+    print('3 - View history')
+    print('4 - Clear history')
+    print('5 - Clear exchange rate')
+    return input('Choose an option or any key to go back: ')
 
 #Function 8: view history
 def view_history():
@@ -349,31 +369,33 @@ while True:
         if ensure_exchange_rate() is None:
             continue
         product_comparison()    
-            
+
     elif choice == '7':
-        if exchange_rate is None:
-            print('No exchange rate defined yet')
-        else:
-            print('Current exchange rate: ', exchange_rate)
-        pause()
-               
-    elif choice == '8':
-            exchange_rate = get_exchange_rate()
-           
-            if exchange_rate is not None:
+        settings_choice = settings_menu()
+        if settings_choice == '1':
+            if exchange_rate is None:
+                print('No exchange rate defined yet')
+            else:
+                print('Current exchange rate: ', exchange_rate)
+            pause()  
+        elif settings_choice == '2':
+             exchange_rate = get_exchange_rate()
+             if exchange_rate is not None:
                 save_exchange_rate()
+             pause()
+        elif settings_choice == '3':
+            view_history()
+            pause()
+        elif settings_choice == '4':
+            clear_history()
+            print('History cleared.')
+            pause()
+        elif settings_choice == '5':
+            clear_exchange_rate()
+            print('Exchange rate cleared.')
             pause()
 
-    elif choice == '9':
-        view_history()
-        pause()
-    
-    elif choice == '10':
-        clear_history()
-        print('History cleared.')
-        pause()
-            
-    elif choice == '11':
+    elif choice == '8':
         print('Goodbye!')
         break
     else:
