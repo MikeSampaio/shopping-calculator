@@ -1,7 +1,11 @@
-#helper_1 - float rules for user input
-from ast import While
+import os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+EXCHANGE_RATE_FILE = os.path.join(BASE_DIR, "exchange_rate.txt")
+HISTORY_FILE = os.path.join(BASE_DIR, "history.txt")
 
+import requests
 
+#helper_1 - float rules for user inpu
 def positive_float(message):
     while True:
         text = input(message)
@@ -34,43 +38,52 @@ def ensure_exchange_rate():
     global exchange_rate
 
     if exchange_rate is None:
-        exchange_rate = get_exchange_rate()
+        print('No exchange rate found')
+        print('Trying online source...')
+
+        update_exchange_rate_online()
+
+        if exchange_rate is None:
+            print('No exchange rate available. Please set it manually.')
+            pause()
+            exchange_rate = get_exchange_rate()
+            if exchange_rate is not None:
+                save_exchange_rate()
 
     return exchange_rate
+
 #helper_4 - pause function
 def pause():
     input('\nPress Enter to continue...')
+
 #helper_5 - screen clear untill I learn a better one
 def clear_screen():
     print('\n' * 50)
+
 #helper 6 - save history to a file
 def save_history(entry):
-    with open('history.txt', 'a') as file:
+    with open(HISTORY_FILE, 'a') as file:
         file.write(entry + '\n')
+
 #helper 7 - separate sections in history
 def save_separator(text):
     save_history(f"\n {'-' * 10} {text} {'-' * 10}")
+
 #helper 8 - clear history
 def clear_history():   
-    with open('history.txt', 'w') as file:
+    with open(HISTORY_FILE, 'w') as file:
         pass
+
 #helper 9 - clear exchange rate
 def clear_exchange_rate():
     global exchange_rate
     exchange_rate = None
-    with open('exchange_rate.txt', 'w') as file:
+    with open(EXCHANGE_RATE_FILE, 'w') as file:
         pass
-
-VERSION = '1.0'           
-exchange_rate = None #state
-GRAMS_PER_POUND = 453.592
-POUNDS_PER_KG = 2.20462
-HUNDRED_GRAMS_PER_POUND = 4.53592
-
 
 #save exchange rate to a file
 def save_exchange_rate():
-    with open('exchange_rate.txt', 'w') as file:
+    with open(EXCHANGE_RATE_FILE, 'w') as file:
         file.write(str(exchange_rate))
         print('Exchange rate saved.')
 
@@ -78,7 +91,7 @@ def save_exchange_rate():
 def load_exchange_rate():
     global exchange_rate
     try:
-        with open('exchange_rate.txt', 'r') as file:
+        with open(EXCHANGE_RATE_FILE, 'r') as file:
             exchange_rate = float(file.read())
     except (FileNotFoundError, ValueError):
         exchange_rate = None
@@ -101,6 +114,25 @@ def get_exchange_rate():
                     
         except ValueError:
                 print('Invalid data. Switch "," to "." ?')
+
+#get exchange rate online
+def update_exchange_rate_online():
+    global exchange_rate
+    try: 
+        response = requests.get("https://api.frankfurter.app/latest?from=CAD&to=EUR")
+        data = response.json()
+        exchange_rate = data['rates']['EUR']
+        save_exchange_rate()
+        print(f"Exchange rate downloaded: 1 CAD$ = {exchange_rate:.4f} €")
+    except Exception as error:
+        print(f"Could not get exchange rate from online source. Why?: {error}")
+    
+
+VERSION = '1.0'           
+exchange_rate = None 
+GRAMS_PER_POUND = 453.592
+POUNDS_PER_KG = 2.20462
+HUNDRED_GRAMS_PER_POUND = 4.53592
 
 #Calculator 1 - price converter
 def price_converter():
@@ -291,7 +323,7 @@ def show_menu():
     if exchange_rate is None:
         print('\n==== Current rate: Not set ====')
     else:
-        print(f'\n==== Current rate: 1 CAD$ = {exchange_rate} € ====')
+        print(f'\n==== Current rate: 1 CAD$ = {exchange_rate:.4f} € ====')
     print('1 - Price Converter (CAD$ to EUR)')
     print('2 - Discount Calculator')
     print('3 - Package price -> lb/kg/100g')
@@ -310,7 +342,7 @@ def show_menu():
 def settings_menu():
     print('\n====Settings====')
     print('1 - Show current exchange rate')
-    print('2 - Change exchange rate')
+    print('2 - Update exchange rate')
     print('3 - View history')
     print('4 - Clear history')
     print('5 - Clear exchange rate')
@@ -319,7 +351,7 @@ def settings_menu():
 #Function 8: view history
 def view_history():
     try:
-        with open('history.txt', 'r') as file:
+        with open(HISTORY_FILE, 'r') as file:
             print('\n=== Calculation History ===')
             print(file.read())
 
@@ -379,9 +411,7 @@ while True:
                 print('Current exchange rate: ', exchange_rate)
             pause()  
         elif settings_choice == '2':
-             exchange_rate = get_exchange_rate()
-             if exchange_rate is not None:
-                save_exchange_rate()
+             update_exchange_rate_online()
              pause()
         elif settings_choice == '3':
             view_history()
