@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>History</title>
+</head>
+<style>
+
+    body {
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: auto;
+        padding: 15px;
+        background-color: #f5f5f5;}
+
+    h1 {text-align: center;color: #ff7b00;}
+
+    input,
+    select,
+    button {
+        width: 100%;
+        padding: 12px;
+        margin-top: 5px;
+        box-sizing: border-box;}
+
+    input,
+    select {
+        border: 1px solid #ccc;
+        border-radius: 8px;}
+
+    button {
+        border: none;
+        border-radius: 8px;
+        background-color: #ff7b00;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;}
+
+    button:hover {opacity: 0.9;}
+
+    .result {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);}
+
+    a {
+        text-decoration: none;
+        color: #ff7b00;
+        font-weight: bold;}
+
+    </style>
+<body>
+
+<a href="/">Home</a>
+
+<h1>History</h1>
+
+<div id="history"></div>
+
+<button onclick="clearHistory()">
+    Clear History
+</button>
+
+<script>
+
+function clearHistory() {
+
+    localStorage.removeItem("history");
+
+    location.reload();
+
+}
+
+</script>
+
+<script>
+
+const historyDiv =
+    document.getElementById("history");
+
+const entries =
+    JSON.parse(
+        localStorage.getItem("history")
+    ) || [];
+
+entries.reverse().forEach(entry => {
+
+    historyDiv.innerHTML +=
+        `<p>${entry}</p>`;
+
+});
+
+</script>
+
+</body>
+</html>

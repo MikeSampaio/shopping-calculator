@@ -26,6 +26,10 @@ def inject_exchange_rate():
                               if last_exchange_update
                               else "Unknown"}
 
+@app.route("/history")
+def history():
+    return render_template("history.html")
+
 @app.route("/")
 def home():
     return render_template("home.html")
