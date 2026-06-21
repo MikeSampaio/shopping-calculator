@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shopping Calculator</title>
+</head>
+<body>
+<a href="/">Home</a>
+    <h1>Shopping Calculator</h1>
+
+    <p>Welcome Jessy/Miguel!</p>
+
+<form method="POST">
+
+    <label>Regular Price:</label>
+    <input type="number" name="regular_price" min="0.01" required>
+
+    <br><br>
+
+    <label>Sale Price:</label>
+    <input type="number" name="sale_price" min="0.01" required>
+
+    <br><br>
+
+    <button>Calculate</button>
+
+</form>
+
+{% if error %}
+    <h3>{{ error }}</h3>
+{% endif %}
+
+{% if discount is not none %}
+    <h2>Discount: {{ discount }}%</h2>
+    <h2>Money Saved: {{ money_saved_cad }} CAD$</h2>
+    <h2>Money Saved: {{ money_saved_eur }} €</h2>
+{% endif %}
+
+{% if message %}
+    <h3>{{ message }}</h3>
+{% endif %}
+
+</body>
+</html>

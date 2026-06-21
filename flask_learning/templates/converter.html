@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Price Converter</title>
+</head>
+<body>
+<a href="/">Home</a>
+<h1>Price Converter</h1>
+
+<form method="POST">
+
+    <label>Price (CAD$):</label>
+    <input type="number" step="0.01" name="price_cad" min="0.01"
+    required>
+
+    <br><br>
+
+    <button>Convert</button>
+
+</form>
+
+{% if error %}
+    <h3>{{ error }}</h3>
+{% endif %}
+
+{% if price_eur is not none %}
+
+    <p>{{ price_cad }} CAD$ are worth {{ price_eur }} €</p>
+
+{% endif %}
+
+</body>
+</html>

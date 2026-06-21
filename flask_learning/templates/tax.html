@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tax Calculator</title>
+</head>
+<body>
+<a href="/">Home</a>
+<h1>Tax Calculator</h1>
+
+<form method="POST">
+
+    <label>Price (CAD$):</label>
+    <input type="number" step="0.01" name="price_cad" min="0.01" required>
+
+    <br><br>
+
+    <button>Calculate</button>
+
+</form>
+
+{% if error %}
+    <h3>{{ error }}</h3>
+{% endif %}
+
+{% if price_with_tax_cad is not none %}
+
+    <h2>Price with Tax: {{ price_with_tax_cad }} CAD$</h2>
+    <h2>Price with Tax: {{ price_with_tax_eur }} €</h2>
+
+    <h2>Tax Amount: {{ tax_amount_cad }} CAD$</h2>
+    <h2>Tax Amount: {{ tax_amount_eur }} €</h2>
+
+{% endif %}
+
+</body>
+</html>

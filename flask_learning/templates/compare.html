@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Comparison</title>
+</head>
+<body>
+<a href="/">Home</a>
+<h1>Product Comparison</h1>
+
+<form method="POST">
+
+    <h2>Product A</h2>
+
+    <input name="name_a" placeholder="Product Name" required>
+
+    <br><br>
+
+    <input
+        type="number"
+        step="0.01"
+        min="0.01"
+        required
+        name="weight_a"
+        placeholder="Weight (g)"
+    >
+
+    <br><br>
+
+    <input
+        type="number"
+        step="0.01"
+        min="0.01"
+        required
+        name="price_a"
+        placeholder="Price (CAD$)"
+    >
+
+    <br><br>
+
+    <h2>Product B</h2>
+
+    <input name="name_b" placeholder="Product Name" required>
+
+    <br><br>
+
+    <input
+        type="number"
+        step="0.01"
+        min="0.01"
+        required
+        name="weight_b"
+        placeholder="Weight (g)"
+    >
+
+    <br><br>
+
+    <input
+        type="number"
+        step="0.01"
+        min="0.01"
+        required
+        name="price_b"
+        placeholder="Price (CAD$)"
+    >
+
+    <br><br>
+
+    <button>Compare</button>
+
+</form>
+
+{% if error %}
+    <h3>{{ error }}</h3>
+{% endif %}
+
+{% if results %}
+
+    <h2>{{ results[0] }}</h2>
+    <p>{{ results[2] }} CAD$/100g | {{ results[4] }} €</p>
+
+    <h2>{{ results[1] }}</h2>
+    <p>{{ results[3] }} CAD$/100g | {{ results[5] }} €</p>
+
+    <h2>Difference</h2>
+    <p>
+        {{ results[6] }} CAD$
+        |
+        {{ results[7] }} €
+        |
+        {{ results[8] }}%
+    </p>
+
+    <h2>Winner</h2>
+    <p>{{ results[9] }}</p>
+
+{% endif %}
+
+</body>
+</html>

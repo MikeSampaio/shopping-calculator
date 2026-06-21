@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Package Price Calculator</title>
+</head>
+<body>
+<a href="/">Home</a>
+<h1>Package Price Calculator</h1>
+
+<form method="POST">
+
+    <label>Unit:</label>
+
+    <select name="unit" required>
+        <option value="lb">lb</option>
+        <option value="g">g</option>
+    </select>
+
+    <br><br>
+
+    <label>Weight:</label>
+    <input type="number" step="0.01" name="weight" min="0.01" required>
+
+    <br><br>
+
+    <label>Package Price (CAD$):</label>
+    <input type="number" step="0.01" name="package_price_cad" min="0.01" required >
+
+    <br><br>
+
+    <button>Calculate</button>
+
+</form>
+
+{% if error %}
+    <h3>{{ error }}</h3>
+{% endif %}
+
+{% if results %}
+
+    <h2>Price per 100g:</h2>
+    <p>{{ results[0] }} CAD$ | {{ results[1] }} €</p>
+
+    <h2>Price per lb:</h2>
+    <p>{{ results[2] }} CAD$ | {{ results[3] }} €</p>
+
+    <h2>Price per kg:</h2>
+    <p>{{ results[4] }} CAD$ | {{ results[5] }} €</p>
+
+{% endif %}
+
+</body>
+</html>

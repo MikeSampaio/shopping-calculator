@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CAD/lb to Package Price</title>
+</head>
+<body>
+<a href="/">Home</a>
+<h1>CAD/lb to Package Price</h1>
+
+<form method="POST">
+
+    <label>Weight (g):</label>
+
+    <input
+        type="number"
+        step="0.01"
+        minimum="0.01"
+        required
+        name="weight_g"
+    >
+
+    <br><br>
+
+    <label>Price per lb (CAD$):</label>
+
+    <input
+        type="number"
+        step="0.01"
+        minimum="0.01"
+        required
+        name="price_per_lb_cad"
+    >
+
+    <br><br>
+
+    <button>Calculate</button>
+
+</form>
+
+{% if error %}
+    <h3>{{ error }}</h3>
+{% endif %}
+
+{% if package_price_cad is not none %}
+
+    <h2>Package Price</h2>
+
+    <p>
+        {{ package_price_cad }} CAD$
+        |
+        {{ package_price_eur }} €
+    </p>
+
+{% endif %}
+
+</body>
+</html>
