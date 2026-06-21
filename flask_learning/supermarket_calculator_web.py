@@ -10,7 +10,7 @@ from datetime import datetime
 #===================Variables and constants===================
 VERSION = '1.0'          
 exchange_rate = None 
-target_currency = 'EUR' 
+last_exchange_update = None
 GRAMS_PER_POUND = 453.592
 POUNDS_PER_KG = 2.20462
 HUNDRED_GRAMS_PER_POUND = 4.53592
@@ -144,6 +144,30 @@ def update_exchange_rate_online():
         print(f"Exchange rate downloaded: 1 CAD$ = {exchange_rate:.4f} €")
     except Exception as error:
         print(f"Could not get exchange rate from online source. Why?: {error}")
+
+def update_exchange_rate_online():
+    global exchange_rate
+    global last_exchange_update
+
+    try:
+        response = requests.get("https://api.frankfurter.app/latest?from=CAD&to=EUR")
+
+        data = response.json()
+
+        exchange_rate = data["rates"]["EUR"]
+
+        save_exchange_rate()
+
+        last_exchange_update = datetime.now()
+
+        print(
+            f"Exchange rate downloaded: "
+            f"1 CAD$ = {exchange_rate:.4f} €")
+
+    except Exception as error:
+        print(
+            f"Could not get exchange rate "
+            f"from online source. Why?: {error}")
 
 #helper 15: view history
 def view_history():

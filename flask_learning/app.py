@@ -1,6 +1,30 @@
 from flask import Flask, render_template, request
-from supermarket_calculator_web import (calculate_discount_web, calculate_tax_web, price_converter_web, packagepricepound_web, price_100g_converter_web, price_lb_to_g_web, product_comparison_web)
+from supermarket_calculator_web import (calculate_discount_web, calculate_tax_web, price_converter_web, packagepricepound_web,
+                                         price_100g_converter_web, price_lb_to_g_web, product_comparison_web, update_exchange_rate_online)
 app = Flask(__name__)
+
+from datetime import datetime, timedelta
+
+@app.context_processor
+def inject_exchange_rate():
+
+    from supermarket_calculator_web import (
+        exchange_rate,
+        last_exchange_update,
+        update_exchange_rate_online)
+
+    if (
+        last_exchange_update is None
+        or datetime.now() - last_exchange_update
+            > timedelta(hours=1)):
+        update_exchange_rate_online()
+
+    from supermarket_calculator_web import (exchange_rate, last_exchange_update)
+
+    return {"exchange_rate": round(exchange_rate, 4), 
+            "exchange_time": last_exchange_update.strftime("%d/%m/%Y %H:%M") 
+                              if last_exchange_update
+                              else "Unknown"}
 
 @app.route("/")
 def home():
@@ -164,6 +188,6 @@ def compare():
         "compare.html",
         results=results, error=error)
 
-
+import os
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0",port=int(os.environ.get("PORT", 5000)))
