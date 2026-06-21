@@ -1,3 +1,4 @@
 history.txt
 exchange_rate.txt
 history.csv
+__pycache__/*.pyc
