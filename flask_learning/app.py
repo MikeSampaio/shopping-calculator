@@ -54,7 +54,7 @@ def discount():
     except ValueError as e:
         error = str(e)
 
-    return render_template("index.html", discount = discount, money_saved_cad = money_saved_cad, money_saved_eur = money_saved_eur, message = message, error = error)
+    return render_template("discount.html", discount = discount, money_saved_cad = money_saved_cad, money_saved_eur = money_saved_eur, message = message, error = error)
 
 
 @app.route("/tax", methods=["GET", "POST"])
